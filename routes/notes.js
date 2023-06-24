@@ -1,10 +1,17 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
+const db = require('../db/db.json');
 
 router.get('/', (req, res)=>{
-  res.send("getting notes");
-  // TODO: pass on something back to index.js
-  // TODO: find out what is that something... array of objs? 
+  //res.send("getting notes");
+
+  res.json(db);  
+});
+
+router.post('/', (req, res)=>{
+    res.send("writing new notes");
+    // TODO: read db.json
 });
 
 router.put('/', (req, res)=>{
@@ -15,7 +22,8 @@ router.put('/', (req, res)=>{
 
 
 router.delete('/:id', (req, res)=>{
-    res.send("deleting notes");
+    
+    res.send(`deleting notes #${req.params.id}`);
 });
 
 // TODO: catch delete without id/invalid id

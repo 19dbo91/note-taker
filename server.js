@@ -1,22 +1,33 @@
 const express = require('express');
 const path = require('path');
-const notesRouter = require("./routes/notes");
+
 
 const PORT = process.env.PORT || 3001;
-
 const app = express();
 
-//app.use(express.static('public')); // can be used instead of HOME
+const notesRouter = require("./routes/notes");
 
-//Home
+
+app.use(express.static('public')); // can be used instead of HOME
+
+//HOME
 app.get('/', (req, res)=>{
   res.sendFile(path.join(__dirname,'./public/index.html'))
 });
 
+
 //HOME -> NOTES
+app.get('/notes', (req, res)=>{
+  res.sendFile(path.join(__dirname,'./public/notes.html'))
+});
+
 app.use('/api/notes', notesRouter);
 
-
+//SEND ERRORS -> HOME
+app.use('*',(req, res) => {
+  console.log("sent HOME")
+  res.sendFile(path.join(__dirname,'./public/index.html'));
+});
 
 
 app.listen(PORT, () =>
