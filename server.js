@@ -1,17 +1,14 @@
 const express = require('express');
 const path = require('path');
 
-const PORT = process.env.PORT || 3001;
 const app = express();
-
-const notesRouter = require("./routes/notes");
-const apiRouter = require('./routes/api');
-
-const uuid = require('./helpers/uuid');
+const PORT = process.env.PORT || 3001;
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 
+const notesRouter = require("./routes/notes");
+const apiRouter = require('./routes/api');
 
 app.use('/', notesRouter)
 app.use('/api', apiRouter)
