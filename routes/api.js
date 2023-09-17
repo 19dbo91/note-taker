@@ -1,33 +1,57 @@
-const router = require('express').Router()
+const express = require('express');
+const app = express();
+const router = express.Router();
+
+const { readFromFile, readAndAppend, writeToFile } = require('../helpers/fsUtils');
+const uuid = require('../helpers/uuid');
+
+const dataPath = './db/db.json';
 
 // GET '/api/notes'
+router.get('/notes', (req, res) => {
+    console.info(`${req.method} request received to get a single note`);
+    
+    readFromFile(dataPath, (err,data) =>{
+        if(err){
+            throw err;
+        };
+    }).then((data) => {
+        return res.json( JSON.parse( data ));
+    });
+});
 
 //POST '/api/notes'
-
-//DELETE `/api/notes/${id}`
-
-
-router.post('/', (req, res)=>{
+router.post('/notes', (req, res)=>{
     console.info(`${req.method} request received to post a single note`);
     
-    const {title, text} = req.body;
-    console.info(`Passing param - title: ${title} `);
-    console.info(`Passing param - text: ${text} `);
+    const { title, text } = req.body;
 
+    if( !title || !text ){
+        console.error("Missing title/text");
+        return res.status(400);
+    }
+    console.log(`Recieved input "${title}": ${text}`);
     const newNote = {
         id: uuid(),
         title,
         text
     }
 
-    let fileRead =[];
-    fileRead = JSON.parse(fs.readFileSync(path,"utf-8"))
-    //console.log(fileRead);
-    fileRead.push(newNote);
-    //console.log(fileRead);
+    let notes = [];
 
-    fs.writeFileSync(path,JSON.stringify(fileRead));
-    console.info(`File ${path} overwritten`);
+    readFromFile(dataPath, (err) =>{
+        if( err ){
+            throw err;
+        };
+    }).then((data) => {
+        notes = JSON.parse( data );
+        console.log(`Before: ${JSON.stringify(notes)}`)
+        
+        notes.push(newNote);
+        console.log(`After: ${JSON.stringify(notes)}`)
+        
+        writeToFile(dataPath, notes);
+    });
 });
 
 router.put('/', (req, res)=>{
@@ -35,15 +59,17 @@ router.put('/', (req, res)=>{
     res.send("updating notes");
 });
 
-router.delete('/:id', (req, res)=>{ //TODO: (1)
-    let queryID = req.params.id.trim();
-    console.info(`${req.method} request received to delete note with id #${queryID}`);
 
-    let notes = JSON.parse( fs.readFileSync( path, "utf-8" ) );
+//DELETE `/api/notes/${id}`
+router.delete('/notes/:id', (req, res)=>{ //TODO: (1)
+    let id = req.params.id.trim();
+    console.info(`${req.method} request received to delete note #${id}`);
+
+    //let notes = JSON.parse( readFromFile( path, "utf-8" ) );
     
     let matchedIndex = null;
     for (let note of notes){
-        if (note.id === queryID){
+        if (note.id === id){
             matchedIndex = notes.indexOf(note); 
         }
     }
