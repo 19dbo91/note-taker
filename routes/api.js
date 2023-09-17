@@ -16,7 +16,7 @@ router.get('/notes', (req, res) => {
             throw err;
         };
     }).then((data) => {
-        return res.json( JSON.parse( data ));
+        return res.status(200).json( JSON.parse( data ));
     });
 });
 
@@ -51,7 +51,7 @@ router.post('/notes', (req, res)=>{
         //console.log(`After: ${JSON.stringify(notes)}`)
         
         writeToFile(dataPath, notes);
-        return res.status(200).json({ message: `${notes}` })
+        return res.status(200).json(JSON.parse( data ));
     });
 });
 
