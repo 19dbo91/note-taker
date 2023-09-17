@@ -11,9 +11,8 @@ app.use(express.urlencoded({ extended: true }));
 const notesRouter = require('./routes/notes');
 const apiRouter = require('./routes/api');
 
-app.use('/', notesRouter)
-app.use('/api', apiRouter)
-
+app.use('/', notesRouter);
+app.use('/api', apiRouter);
 
 
 app.listen(PORT, () =>
