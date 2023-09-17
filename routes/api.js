@@ -55,13 +55,6 @@ router.post('/notes', (req, res)=>{
     });
 });
 
-// May not be needed this placeholder
-// router.put('/', (req, res)=>{
-//     console.info(`${req.method} request received to post a single note`);
-//     res.send("updating notes");
-// });
-
-
 //DELETE `/api/notes/${id}`
 router.delete('/notes/:id', (req, res)=>{
     
